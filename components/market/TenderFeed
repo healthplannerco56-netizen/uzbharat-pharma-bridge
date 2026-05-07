@@ -1,0 +1,61 @@
+'use client';
+
+import { cn, formatCurrency } from '@/lib/utils';
+import { TrendingUp, TrendingDown, Calculator, DollarSign, Calendar } from 'lucide-react';
+
+const tenders = [
+  { id: 'TND001', number: 'UZ-GOV-2026-001', title: 'Amoxicillin 500mg Tablets', category: 'Antibiotics', quantity: 500000, unit: 'tablets', value: 2500000000, deadline: '2026-05-15', entity: 'Ministry of Health Uzbekistan' },
+  { id: 'TND002', number: 'UZ-GOV-2026-002', title: 'Atorvastatin 20mg Tablets', category: 'Cardiovascular', quantity: 300000, unit: 'tablets', value: 1800000000, deadline: '2026-05-20', entity: 'Tashkent City Health Dept' },
+  { id: 'TND003', number: 'UZ-GOV-2026-003', title: 'Metformin 1000mg Tablets', category: 'Antidiabetic', quantity: 400000, unit: 'tablets', value: 2000000000, deadline: '2026-05-25', entity: 'Regional Healthcare Centers' },
+  { id: 'TND004', number: 'UZ-GOV-2026-004', title: 'Ciprofloxacin 500mg Tablets', category: 'Antibiotics', quantity: 250000, unit: 'tablets', value: 1500000000, deadline: '2026-06-01', entity: 'Ministry of Health Uzbekistan' },
+  { id: 'TND005', number: 'UZ-GOV-2026-005', title: 'Omeprazole 20mg Capsules', category: 'Gastrointestinal', quantity: 200000, unit: 'capsules', value: 1200000000, deadline: '2026-06-10', entity: 'National Pharmacy Chain' },
+];
+
+export function TenderFeed() {
+  return (
+    <div className="rounded-lg border bg-white shadow-sm">
+      <div className="flex items-center gap-3 border-b px-6 py-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white">
+          <DollarSign className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="font-semibold text-slate-900">Farma.xarid.uz Tender Feed</h3>
+          <p className="text-xs text-slate-500">Live state procurement opportunities</p>
+        </div>
+      </div>
+
+      <div className="divide-y">
+        {tenders.map((tender) => (
+          <div key={tender.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-50">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100">
+                <TrendingUp className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="font-medium text-slate-900">{tender.title}</p>
+                <p className="text-xs text-slate-500">{tender.number}</p>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">{tender.category}</span>
+                  <span className="text-xs text-slate-400">•</span>
+                  <span className="text-xs text-slate-500">{tender.entity}</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-semibold text-emerald-600">
+                {formatCurrency(tender.value, 'UZS').replace('₹', 'UZS ')}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {tender.quantity.toLocaleString()} {tender.unit}
+              </p>
+              <p className="mt-1 flex items-center justify-end gap-1 text-xs text-amber-600">
+                <Calendar className="h-3 w-3" />
+                Deadline: {tender.deadline}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
