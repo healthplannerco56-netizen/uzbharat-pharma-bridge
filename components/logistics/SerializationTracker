@@ -1,0 +1,125 @@
+'use client';
+
+import { cn } from '@/lib/utils';
+import { QRCode, Package, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
+
+interface SerializationCardProps {
+  batchNumber: string;
+  gs1Code: string;
+  status: 'pending' | 'approved' | 'rejected';
+  requestedAt: string;
+  drugName: string;
+}
+
+export function SerializationTracker() {
+  const batches = [
+    { id: 'BT001', batch: 'CIPROZEN-500', code: '890123456789012345', status: 'approved', requestedAt: '2026-03-15', quantity: 50000 },
+    { id: 'BT002', batch: 'METFORMAX', code: '890123456789012346', status: 'pending', requestedAt: '2026-04-20', quantity: 75000 },
+    { id: 'BT003', batch: 'ATENSERA-20', code: '890123456789012347', status: 'pending', requestedAt: '2026-04-22', quantity: 30000 },
+  ];
+
+  return (
+    <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="mb-6 flex items-center gap-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-900 text-white">
+          <QRCode className="h-6 w-6" />
+        </div>
+        <div>
+          <h3 className="font-semibold text-slate-900">Asl Belgisi Serialization</h3>
+          <p className="text-sm text-slate-500">GS1 DataMatrix code requests via xTrace API</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {batches.map((batch) => (
+          <div key={batch.id} className="rounded-lg border p-4">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                <div className={cn(
+                  'flex h-10 w-10 items-center justify-center rounded-lg',
+                  batch.status === 'approved' ? 'bg-emerald-100' : 'bg-amber-100'
+                )}>
+                  {batch.status === 'approved' ? (
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                  ) : (
+                    <Clock className="h-5 w-5 text-amber-600" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-slate-900">{batch.batch}</p>
+                  <p className="text-xs text-slate-500">Batch: {batch.id} • Qty: {batch.quantity.toLocaleString()} units</p>
+                  {batch.status === 'approved' && (
+                    <p className="mt-1 font-mono text-xs text-slate-600">GS1: {batch.code}</p>
+                  )}
+                </div>
+              </div>
+              <span className={cn(
+                'rounded-full px-2.5 py-1 text-xs font-medium',
+                batch.status === 'approved' && 'bg-emerald-100 text-emerald-700',
+                batch.status === 'pending' && 'bg-amber-100 text-amber-700',
+                batch.status === 'rejected' && 'bg-red-100 text-red-700'
+              )}>
+                {batch.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button className="mt-4 w-full rounded-lg border-2 border-dashed border-slate-300 py-3 text-sm font-medium text-slate-600 hover:border-emerald-500 hover:text-emerald-600">
+        + Request New GS1 Code
+      </button>
+    </div>
+  );
+}
+UzBharat Pharma-Bridge
+SaaS MVP for Indian pharmaceutical exporters and Uzbek Authorized Representatives
+
+## Tech Stack
+- Frontend: Next.js 14 (App Router) + Tailwind CSS + Lucide Icons
+- Backend: Supabase (Auth, PostgreSQL, Real-time)
+- Design: Slate #0F172A / Emerald #10B981
+
+## App Structure
+```
+app/
+  dashboard/      - Main compliance dashboard
+  compliance/     - Registration pipeline (7 stages)
+  logistics/      - Serialization, customs, cold-chain
+  market/         - Tenders, profitability calculator
+  documents/      - Document vault
+  auth/           - Auth pages
+components/
+  layout/         - Sidebar, AppShell
+  compliance/     - RegistrationPipeline, IPScanner, RegistrationForm
+  logistics/      - SerializationTracker, CustomsPreClearance, ColdChainMap
+  market/         - TenderFeed, ProfitabilityCalculator
+lib/
+  utils.ts        - Helper functions
+  supabase.ts     - Supabase client
+types/
+  index.ts        - TypeScript types
+supabase/
+  schema.sql      - Complete database schema
+```
+
+## Key Features
+1. 7-Stage Registration Pipeline (Resolution No. 738)
+2. MoJ IP Scanner for trademark conflict detection
+3. GS1 DataMatrix serialization (xTrace API)
+4. 20% customs discount eligibility tracker
+5. Cold-chain logistics map (Mumbai/Delhi → Tashkent)
+6. Farma.xarid.uz tender feed
+7. Profitability calculator with VAT, logistics, amortized costs
+
+## Setup
+```bash
+npm install
+npm run dev
+```
+
+## Supabase Setup
+1. Create Supabase project
+2. Run supabase/schema.sql
+3. Copy .env.local.example to .env.local
+4. Add your Supabase credentials
