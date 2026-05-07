@@ -1,0 +1,108 @@
+'use client';
+
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { FileText, Check, Download, Printer } from 'lucide-react';
+
+const customsDocs = [
+  { id: 'doc1', name: 'Commercial Invoice', required: true, uploaded: true },
+  { id: 'doc2', name: 'Packing List', required: true, uploaded: true },
+  { id: 'doc3', name: 'Certificate of Origin', required: true, uploaded: false },
+  { id: 'doc4', name: 'Bill of Lading', required: true, uploaded: false },
+  { id: 'doc5', name: 'Drug Registration Certificate', required: true, uploaded: true },
+  { id: 'doc6', name: 'GMP Certificate', required: false, uploaded: false },
+  { id: 'doc7', name: 'Analysis Certificate (CoA)', required: true, uploaded: false },
+];
+
+export function CustomsPreClearance() {
+  const [discountEligible, setDiscountEligible] = useState(true);
+
+  return (
+    <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="mb-6 flex items-center gap-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600 text-white">
+          <FileText className="h-6 w-6" />
+        </div>
+        <div>
+          <h3 className="font-semibold text-slate-900">Advance Customs Declaration</h3>
+          <p className="text-sm text-slate-500">Required documents for 2026 20% customs fee discount</p>
+        </div>
+      </div>
+
+      <div className={cn(
+        'mb-6 flex items-center justify-between rounded-lg p-4',
+        discountEligible ? 'bg-emerald-50' : 'bg-red-50'
+      )}>
+        <div className="flex items-center gap-3">
+          {discountEligible ? (
+            <Check className="h-6 w-6 text-emerald-600" />
+          ) : (
+            <span className="h-6 w-6 rounded-full bg-red-600 text-center text-sm text-white">!</span>
+          )}
+          <div>
+            <p className={cn('font-medium', discountEligible ? 'text-emerald-800' : 'text-red-800')}>
+              {discountEligible ? '20% Customs Discount Eligible' : 'Missing Documents'}
+            </p>
+            <p className="text-sm text-slate-500">
+              {discountEligible ? 'Advance declaration submitted on time' : 'Complete all required documents to qualify'}
+            </p>
+          </div>
+        </div>
+        {discountEligible && (
+          <span className="rounded-full bg-emerald-600 px-4 py-1.5 text-sm font-semibold text-white">
+            -20% Fee
+          </span>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        {customsDocs.map((doc) => (
+          <div key={doc.id} className="flex items-center justify-between rounded-lg border p-3">
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                'flex h-8 w-8 items-center justify-center rounded-lg',
+                doc.uploaded ? 'bg-emerald-100' : doc.required ? 'bg-amber-100' : 'bg-slate-100'
+              )}>
+                {doc.uploaded ? (
+                  <Check className="h-4 w-4 text-emerald-600" />
+                ) : doc.required ? (
+                  <span className="text-xs font-bold text-amber-600">!</span>
+                ) : (
+                  <span className="text-xs text-slate-500">•</span>
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-900">{doc.name}</p>
+                {doc.required && <span className="text-xs text-slate-500">Required</span>}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {doc.uploaded ? (
+                <>
+                  <span className="text-xs text-emerald-600">Uploaded</span>
+                  <button className="rounded p-1 text-slate-400 hover:bg-slate-100">
+                    <Download className="h-4 w-4" />
+                  </button>
+                </>
+              ) : (
+                <button className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-200">
+                  Upload
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 flex gap-3">
+        <button className="flex-1 rounded-lg bg-slate-900 py-2.5 text-sm font-medium text-white hover:bg-slate-800">
+          <Printer className="mr-2 inline h-4 w-4" />
+          Print Declaration
+        </button>
+        <button className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-sm font-medium text-white hover:bg-emerald-700">
+          Submit for Review
+        </button>
+      </div>
+    </div>
+  );
+}
